@@ -14,6 +14,7 @@ class UserObserver
     public function created(User $user): void
     {
         EmailVerification::generateTokenFor($user);
+        $user->createDefaultProfile();
     }
 
     /**

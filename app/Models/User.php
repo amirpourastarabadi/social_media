@@ -69,29 +69,17 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
-    public function authToken():Attribute
+    public function authToken(): Attribute
     {
         return Attribute::make(
-            get: fn() => JWTAuth::fromUser($this)
+            get: fn () => JWTAuth::fromUser($this)
         );
-    }
-
-    public function isVerified():Attribute
-    {
-        return Attribute::make(
-            get: fn() => !is_null($this->email_verified_at)
-        );
-    }
-
-    public function emailToken()
-    {
-        return $this->hasMany(EmailVerification::class);
     }
 
     public function firstValidToken(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->emailToken()->unused()->first()?->token
+            get: fn () => $this->emailToken()->unused()->first()?->token
         );
     }
 
@@ -107,4 +95,27 @@ class User extends Authenticatable implements JWTSubject
             )
         );
     }
+
+    public function isVerified(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => !is_null($this->email_verified_at)
+        );
+    }
+
+    public function createDefaultProfile()
+    {
+        $this->profile()->create();
+    }
+
+    public function profile()
+    {
+        return $this->hasOne(UserProfile::class);
+    }
+
+    public function emailToken()
+    {
+        return $this->hasMany(EmailVerification::class);
+    }
+
 }
