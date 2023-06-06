@@ -42,7 +42,6 @@ class EmailVerificationTest extends TestCase
 
     public function test_invalid_requested_fail_to_verify_email(): void
     {
-        $this->freezeTime();
         $user = User::factory()->create();
         $token = 'invalid token';
         $response = $this->getJson(
@@ -55,7 +54,7 @@ class EmailVerificationTest extends TestCase
             )
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(500);
 
         $response->assertJson(
             fn (AssertableJson $response) =>

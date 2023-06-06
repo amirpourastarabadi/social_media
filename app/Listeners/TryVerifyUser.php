@@ -2,8 +2,10 @@
 
 namespace App\Listeners;
 
+use App\Exceptions\EmailVerificationException;
 use App\Models\EmailVerification;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Http\Response;
 use Illuminate\Queue\InteractsWithQueue;
 
 class TryVerifyUser
@@ -22,7 +24,7 @@ class TryVerifyUser
     public function handle(object $event)
     {
         if (is_null($event->user) || $event->user->first_valid_token !== $event->token) {
-            return 'invalid request';
+            throw new EmailVerificationException('invalid request', Response::HTTP_BAD_REQUEST);
         }
 
         $event->user->emailToken()->where('token', $event->token)->first()->update(['verified_at' => now()]);
