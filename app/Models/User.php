@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -23,7 +24,9 @@ class User extends Authenticatable implements JWTSubject
     protected $fillable = [
         'name',
         'email',
+        'uuid',
         'password',
+        'email_verified_at'
     ];
 
     /**
@@ -64,6 +67,20 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function authToken():Attribute
+    {
+        return Attribute::make(
+            get: fn() => JWTAuth::fromUser($this)
+        );
+    }
+
+    public function isVerified():Attribute
+    {
+        return Attribute::make(
+            get: fn() => !is_null($this->email_verified_at)
+        );
     }
 
     public function emailToken()

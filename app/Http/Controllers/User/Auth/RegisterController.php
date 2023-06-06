@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\User\Auth;
 
+use App\Http\Resources\User\Authentication\Register\RegisteredUserResource;
+use App\Http\Requests\User\Auth\RegisterRequest;
 use App\Events\User\RegistrationEvent;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\User\Auth\RegisterRequest;
-use App\Mail\VerifyEmail;
-use App\Models\User;
-use Illuminate\Support\Facades\Mail;
+
 
 class RegisterController extends Controller
 {
@@ -18,8 +17,8 @@ class RegisterController extends Controller
 
     public function register(RegisterRequest $request)
     {
-        RegistrationEvent::dispatch($request->validated());
+        $result = RegistrationEvent::dispatch($request->validated()); 
 
-        return response()->json(['message' => 'please verify your email to continue.']);
+        return RegisteredUserResource::make($result[0]); 
     }
 }

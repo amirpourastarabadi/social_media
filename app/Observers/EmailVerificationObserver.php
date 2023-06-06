@@ -33,6 +33,16 @@ class EmailVerificationObserver
     }
 
     /**
+     * Handle the EmailVerification "updating" event.
+     */
+    public function updating(EmailVerification $emailVerification): void
+    {
+        if($emailVerification->isDirty('verified_at')){
+            $emailVerification->owner()->update(['email_verified_at' => now()]);
+        }
+    }
+
+    /**
      * Handle the EmailVerification "deleted" event.
      */
     public function deleted(EmailVerification $emailVerification): void

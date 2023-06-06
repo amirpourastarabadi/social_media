@@ -19,8 +19,10 @@ class UserCreation
     /**
      * Handle the event.
      */
-    public function handle(object $event): void
+    public function handle(object $event)
     {
         $event->user = User::create($event->userData);
+        
+        return $event->user;
     }
 }

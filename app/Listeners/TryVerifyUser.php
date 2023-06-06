@@ -3,10 +3,7 @@
 namespace App\Listeners;
 
 use App\Exceptions\EmailVerificationException;
-use App\Models\EmailVerification;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Http\Response;
-use Illuminate\Queue\InteractsWithQueue;
 
 class TryVerifyUser
 {

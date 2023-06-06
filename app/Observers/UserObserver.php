@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Models\EmailVerification;
 use App\Models\User;
+use Ramsey\Uuid\Uuid;
 
 class UserObserver
 {
@@ -13,6 +14,14 @@ class UserObserver
     public function created(User $user): void
     {
         EmailVerification::generateTokenFor($user);
+    }
+
+    /**
+     * Handle the User "creating" event.
+     */
+    public function creating(User $user): void
+    {
+        $user->uuid = Uuid::uuid4()->toString();
     }
 
     /**
