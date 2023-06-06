@@ -29,9 +29,16 @@ class EmailVerification extends Model
         'verified_at' => 'datetime'
     ];
 
-    public function scopeUnused(Builder $builder):Builder
+    public function scopeUnused(Builder $builder): Builder
     {
         return $builder->whereNull('verified_at')->limit(1);
+    }
+
+    public static function generateTokenFor(User $user)
+    {
+        static::create([
+            'user_id' => $user->id
+        ]);
     }
 
     public function owner()

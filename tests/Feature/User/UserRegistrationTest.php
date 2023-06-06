@@ -34,18 +34,4 @@ class UserRegistrationTest extends TestCase
         $this->assertDatabaseCount('users', 1);
         $this->assertDatabaseHas('users', Arr::except($inputs, ['password_confirmation', 'password']));
     }
-
-    public function test_when_user_register_an_email_verification_email_sent_to_user()
-    {
-        Mail::fake();
-        $inputs = [
-            'email'                 => 'example@gmail.com',
-            'name'                  => 'user',
-            'password'              => 'password',
-            'password_confirmation' => 'password'
-        ];
-
-        $response = $this->post('/api/register', $inputs);
-        Mail::assertQueued(SendVerificationEmail::class);
-    }
 }

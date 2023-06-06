@@ -71,11 +71,6 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(EmailVerification::class);
     }
 
-    public function generateEmailVerificationToken()
-    {
-        $this->emailToken()->create();
-    }
-
     public function firstValidToken(): Attribute
     {
         return Attribute::make(
