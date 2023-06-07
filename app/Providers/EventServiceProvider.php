@@ -2,13 +2,16 @@
 
 namespace App\Providers;
 
-use App\Events\EmailVerificationEvent;
+use App\Events\User\EmailVerificationEvent;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use App\Listeners\User\SendVerificationEmail;
 use App\Events\User\RegistrationEvent;
-use App\Listeners\FindRequestedUser;
-use App\Listeners\TryVerifyUser;
+use App\Events\User\UpdateUserProfileEvent;
+use App\Listeners\User\FindRequestedUser;
+use App\Listeners\User\TryVerifyUser;
+use App\Listeners\User\UpdateProfile;
+use App\Listeners\User\UpdateUser;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Event;
 use App\Listeners\User\UserCreation;
@@ -31,6 +34,10 @@ class EventServiceProvider extends ServiceProvider
         EmailVerificationEvent::class => [
             FindRequestedUser::class,
             TryVerifyUser::class
+        ],
+        UpdateUserProfileEvent::class => [
+            UpdateUser::class,
+            UpdateProfile::class
         ]
     ];
 

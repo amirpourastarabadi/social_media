@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Listeners;
+namespace App\Listeners\User;
 
-use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class FindRequestedUser
+class UpdateUser
 {
     /**
      * Create the event listener.
@@ -21,6 +20,6 @@ class FindRequestedUser
      */
     public function handle(object $event): void
     {
-        $event->user = User::where('email', $event->email)->first();
+        $event->user->update($event->getUserData());
     }
 }

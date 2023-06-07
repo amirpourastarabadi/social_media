@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\User\Auth;
 
-use App\Events\EmailVerificationEvent;
+use App\Events\User\EmailVerificationEvent;
 use App\Http\Controllers\Controller;
 use App\Models\EmailVerification;
 use Illuminate\Http\Request;
