@@ -12,6 +12,9 @@ class HomeController extends Controller
      */
     public function __invoke(Request $request)
     {
+        if(auth()->user()){
+            return view('general.society');
+        }
         return view('general.home');
     }
 }

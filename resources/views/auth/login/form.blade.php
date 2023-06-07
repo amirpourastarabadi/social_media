@@ -59,7 +59,7 @@
           <div class="card-header">{{ __('Login') }}</div>
 
           <div class="card-body">
-            <form method="POST" action="{{ route('login') }}">
+            <form method="POST" action="{{ route('login') }}" id='login-form'>
               @csrf
               <div class="form-group">
                 <label for="email">Email address</label>
@@ -76,7 +76,8 @@
                   </div>
                 </div>
               </div>
-              <button type="submit" class="btn btn-primary my-3">Login</button>
+              <div class="alert text-danger" id='alert-message'></div>
+              <button type="submit" class="btn btn-primary my-3" id="login-button">Login</button>
               <div class="mt-3">
                 <a href="{{ route('password.request') }}">Forgot your password?</a>
               </div>
@@ -105,6 +106,36 @@
         showPasswordBtn.innerHTML = '<i class="fa fa-eye"></i>';
       }
     });
+  </script>
+
+  <script>
+    const submitButton = document.querySelector('#login-button');
+    const form = document.querySelector('#login-form');
+    const loginUrl = "{{route('login')}}"
+    // Add an event listener to the form submit event
+    form.addEventListener('submit', event => {
+      // Prevent the default form submission behavior
+      event.preventDefault();
+      fetch(loginUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: form.querySelector('#email').value,
+            password: form.querySelector('#password').value
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          // Store the JWT token in local storage
+          localStorage.setItem('jwt_token', data.token);
+        })
+        .catch(error => {
+          document.querySelector('#alert-message').innerText = 'amir'
+          console.error('Error authenticating user:', error);
+        });
+    })
   </script>
 </body>
 
