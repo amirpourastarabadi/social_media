@@ -91,10 +91,17 @@ class User extends Authenticatable implements JWTSubject
         );
     }
 
-    public function firstValidToken(): Attribute
+    public function emailVerificationToken(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->emailToken()->unused()->first()?->token
+            get: fn () => $this->emailToken()->first()?->token
+        );
+    }
+
+    public function resetPasswordToken(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->passwordResetToken()->first()?->token
         );
     }
 
@@ -104,7 +111,20 @@ class User extends Authenticatable implements JWTSubject
             get: fn () => route(
                 'email_verification',
                 [
-                    'token' => $this->first_valid_token,
+                    'token' => $this->email_verification_token,
+                    'email' => $this->email,
+                ]
+            )
+        );
+    }
+
+    public function resetPasswordLink(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => route(
+                'password.reset.form',
+                [
+                    'token' => $this->reset_password_token,
                     'email' => $this->email,
                 ]
             )
@@ -131,5 +151,10 @@ class User extends Authenticatable implements JWTSubject
     public function emailToken()
     {
         return $this->hasMany(EmailVerification::class);
+    }
+
+    public function passwordResetToken()
+    {
+        return $this->hasMany(PasswordReset::class);
     }
 }

@@ -16,7 +16,6 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(User::class);
             $table->string('token', 512)->unique();
-            $table->timestamp('verified_at')->nullable();
         });
     }
 

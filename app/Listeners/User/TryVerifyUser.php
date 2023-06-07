@@ -20,11 +20,12 @@ class TryVerifyUser
      */
     public function handle(object $event)
     {
-        if (is_null($event->user) || $event->user->first_valid_token !== $event->token) {
+        if (is_null($event->user) || $event->user->email_verification_token !== $event->token) {
             throw new EmailVerificationException('invalid request', Response::HTTP_BAD_REQUEST);
         }
 
-        $event->user->emailToken()->where('token', $event->token)->first()->update(['verified_at' => now()]);
+        $event->user->emailToken()->where('token', $event->token)->first()->delete();
+        $event->user->update(['email_verified_at' => now()]);
         return 'email verified successfully';
     }
 }

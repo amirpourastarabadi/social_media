@@ -4,9 +4,11 @@ namespace App\Providers;
 
 use App\Observers\EmailVerificationObserver;
 use App\Utilities\FileSystem\FileSystem;
+use App\Observers\PasswordResetObserver;
 use Illuminate\Support\ServiceProvider;
 use App\Models\EmailVerification;
 use App\Observers\UserObserver;
+use App\Models\PasswordReset;
 use App\Models\User;
 
 class AppServiceProvider extends ServiceProvider
@@ -26,5 +28,6 @@ class AppServiceProvider extends ServiceProvider
     {
         User::observe(UserObserver::class);
         EmailVerification::observe(EmailVerificationObserver::class);
+        PasswordReset::observe(PasswordResetObserver::class);
     }
 }

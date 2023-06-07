@@ -2,32 +2,28 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
-class EmailVerification extends Model
+class PasswordReset extends Model
 {
     use HasFactory;
 
-    public $table = 'email_verification_tokens';
+    public $table = 'password_resets';
 
     public $timestamps = false;
 
     public $fillable = [
         'user_id',
-        'token'
+        'token',
+        'created_at',
     ];
 
-    public $hidden = [
-        'token'
-    ];
 
-    public static function generateTokenFor(User $user)
+    public static function generateTokenForUser(User $user)
     {
         static::create([
-            'user_id' => $user->id
+            'user_id' => $user->id,
         ]);
     }
 
@@ -35,4 +31,5 @@ class EmailVerification extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
 }

@@ -18,7 +18,10 @@ class EmailVerificationTest extends TestCase
     {
         $this->freezeTime();
         $user = User::factory()->create();
-        $token = $user->first_valid_token;
+        $token = $user->email_verification_token;
+
+        $this->assertDatabaseHas('email_verification_tokens', ['token' => $token]);
+        
         $response = $this->getJson(
             route(
                 'email_verification',
@@ -35,9 +38,7 @@ class EmailVerificationTest extends TestCase
             $response->where('message', 'email verified successfully')
                 ->etc()
         );
-        $user->refresh();
-
-        $this->assertDatabaseHas('email_verification_tokens', ['token' => $token, 'verified_at' => now()->toDateTimeString()]);
+        $this->assertDatabaseMissing('email_verification_tokens', ['token' => $token]);
     }
 
     public function test_invalid_requested_fail_to_verify_email(): void
@@ -62,6 +63,6 @@ class EmailVerificationTest extends TestCase
                 ->etc()
         );
 
-        $this->assertDatabaseHas('email_verification_tokens', ['token' => $user->first_valid_token, 'verified_at' => null]);
+        $this->assertDatabaseHas('email_verification_tokens', ['token' => $user->email_verification_token]);
     }
 }

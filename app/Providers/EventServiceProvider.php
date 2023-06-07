@@ -3,17 +3,19 @@
 namespace App\Providers;
 
 use App\Events\User\EmailVerificationEvent;
+use App\Events\User\PasswordResetRequestEvent;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use App\Listeners\User\SendVerificationEmail;
 use App\Events\User\RegistrationEvent;
 use App\Events\User\UpdateUserProfileEvent;
 use App\Listeners\User\FindRequestedUser;
+use App\Listeners\User\GeneratePasswordResetToken;
+use App\Listeners\User\PasswordResetEmail;
 use App\Listeners\User\TryVerifyUser;
 use App\Listeners\User\UpdateProfile;
 use App\Listeners\User\UpdateUser;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Event;
 use App\Listeners\User\UserCreation;
 
 class EventServiceProvider extends ServiceProvider
@@ -38,7 +40,12 @@ class EventServiceProvider extends ServiceProvider
         UpdateUserProfileEvent::class => [
             UpdateUser::class,
             UpdateProfile::class
-        ]
+        ],
+        PasswordResetRequestEvent::class => [
+            FindRequestedUser::class,
+            GeneratePasswordResetToken::class,
+            PasswordResetEmail::class,
+        ],
     ];
 
     /**
