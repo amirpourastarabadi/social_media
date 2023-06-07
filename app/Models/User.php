@@ -4,13 +4,14 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Tymon\JWTAuth\Contracts\JWTSubject;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Tymon\JWTAuth\Contracts\JWTSubject;
+use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -69,10 +70,24 @@ class User extends Authenticatable implements JWTSubject
         return [];
     }
 
+    public static function attemptToLogin(array $credentials)
+    {
+        $auth_token = Auth::attempt($credentials);
+
+        if (!$auth_token) {
+            return false;
+        }
+
+        $user = auth()->user();
+        $user->jwt_token = $auth_token;
+
+        return $user;
+    }
+
     public function authToken(): Attribute
     {
         return Attribute::make(
-            get: fn () => JWTAuth::fromUser($this)
+            get: fn () => is_null($this->jwt_token) ? JWTAuth::fromUser($this) : $this->jwt_token
         );
     }
 
@@ -117,5 +132,4 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(EmailVerification::class);
     }
-
 }
