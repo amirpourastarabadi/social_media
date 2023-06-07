@@ -2,12 +2,12 @@
 
 namespace App\Providers;
 
-use App\Models\EmailVerification;
-use App\Models\User;
 use App\Observers\EmailVerificationObserver;
-use App\Observers\UserObserver;
-use App\Utilities\FileSystem\Upload;
+use App\Utilities\FileSystem\FileSystem;
 use Illuminate\Support\ServiceProvider;
+use App\Models\EmailVerification;
+use App\Observers\UserObserver;
+use App\Models\User;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -16,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(Upload::class, Upload::class);
+        $this->app->bind(FileSystem::class, FileSystem::class);
     }
 
     /**

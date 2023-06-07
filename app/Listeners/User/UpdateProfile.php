@@ -3,14 +3,14 @@
 namespace App\Listeners\User;
 
 use Symfony\Component\HttpFoundation\File\File;
-use App\Utilities\FileSystem\Upload;
+use App\Utilities\FileSystem\FileSystem;
 
 class UpdateProfile
 {
     /**
      * Create the event listener.
      */
-    public function __construct(private Upload $fileUploader)
+    public function __construct(private FileSystem $fileUploader)
     {
         //
     }
