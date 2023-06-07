@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Listeners;
+namespace App\Listeners\User;
 
 use App\Exceptions\EmailVerificationException;
 use Illuminate\Http\Response;

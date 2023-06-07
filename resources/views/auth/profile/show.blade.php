@@ -14,17 +14,12 @@
     <div class="container mt-5">
         <div class="row">
             <div class="col-md-3">
-                <div class="card p-1">
+                <div class="card">
                     <div class="card-header">
                         Profile Picture
                     </div>
                     <div class="card-body">
-                        <img src="{{ asset('storage/profile_images/'.$user->profile->image) }}" alt="{{ $user->name }}" class="img-fluid">
-                    </div>
-                    <div class="d-flex flex-column align-items-center   ">
-                        <div>
-                            <input type="file" class="form-control-file" id="image" name="image">
-                        </div>
+                        <img src="{{ asset('storage/profile_images/'.$user->profile->image_full_path) }}" alt="{{ $user->name }}" class="img-fluid">
                     </div>
                 </div>
             </div>
@@ -36,6 +31,7 @@
                     <div class="card-body">
                         <form action="{{ route('profile.update') }}" method="POST">
                             @csrf
+                            @method('PUT')
                             <div class="form-group">
                                 <label for="name">Name:</label>
                                 <input type="text" class="form-control" id="name" name="name" value="{{ $user->name }}">
@@ -48,6 +44,11 @@
                                 <label for="bio">Bio:</label>
                                 <textarea class="form-control" id="bio" name="bio">{{ $user->bio }}</textarea>
                             </div>
+                            <div class="form-group">
+                                <label for="bio">Picture:</label>
+                                <input type="file" class="form-control-file" id="image" name="image">
+                            </div>
+
                             <button type="submit" class="btn btn-primary">Save Changes</button>
                             <a href="{{ route('password.request') }}" class="btn btn-link">Reset Password</a>
                         </form>
