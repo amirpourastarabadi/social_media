@@ -57,7 +57,12 @@
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">Register</button>
             </div>
+
+            <div class="mt-3">
+            <a href="{{ route('login.form') }}">Login</a>
+        </div>
         </form>
+
     </div>
 </body>
 
