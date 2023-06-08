@@ -47,11 +47,7 @@ class LoginTest extends UserTestCase
 
         $response = $this->postJson('/api/login', $inputs);
         $response->assertStatus(Response::HTTP_UNAUTHORIZED);
-        $response->assertJson(
-            fn (AssertableJson $response) =>
-            $response->where('message', 'invalid credentials.')
-                ->etc()
-        );
+
         $this->assertFalse(Auth::guard('api')->check());
     }
 }

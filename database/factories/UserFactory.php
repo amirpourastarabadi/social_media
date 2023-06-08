@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Ramsey\Uuid\Uuid;
 
@@ -23,7 +24,8 @@ class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'uuid' => Uuid::uuid4()->toString(),
             'email_verified_at' => null,
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'password' =>  'password',
+            'jwt_token' => null,
             'remember_token' => Str::random(10),
         ];
     }

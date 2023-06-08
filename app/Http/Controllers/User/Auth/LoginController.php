@@ -17,7 +17,7 @@ class LoginController extends Controller
 
     public function login(LoginRequest $request)
     {
-        if(!$user = User::attemptToLogin($request->validated())){
+        if(!$user = User::attemptToLogin($request->only('password', 'email'))){
             return response()->json(['message' => 'invalid credentials.'], Response::HTTP_UNAUTHORIZED);
         }
 

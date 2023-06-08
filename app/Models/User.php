@@ -7,9 +7,11 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Http\Response;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -26,6 +28,7 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'uuid',
+        'jwt_token',
         'password',
         'email_verified_at'
     ];
@@ -73,21 +76,26 @@ class User extends Authenticatable implements JWTSubject
     public static function attemptToLogin(array $credentials)
     {
         $auth_token = Auth::attempt($credentials);
-
+        
         if (!$auth_token) {
-            return false;
+            abort(Response::HTTP_UNAUTHORIZED);
         }
-
-        $user = auth()->user();
-        $user->jwt_token = $auth_token;
-
-        return $user;
+        
+        auth()->user()->update(['jwt_token' => $auth_token]);
+        return auth()->user();
     }
 
     public function authToken(): Attribute
     {
         return Attribute::make(
-            get: fn () => is_null($this->jwt_token) ? JWTAuth::fromUser($this) : $this->jwt_token
+            get: function () {
+                
+                $this->jwt_token = $this->jwt_token ?? JWTAuth::fromUser($this);
+                
+                $this->save();
+
+                return $this->jwt_token;
+            }
         );
     }
 
@@ -122,7 +130,7 @@ class User extends Authenticatable implements JWTSubject
     {
         return Attribute::make(
             get: fn () => route(
-                'password.reset.form',
+                'password.reset.new_password',
                 [
                     'token' => $this->reset_password_token,
                     'email' => $this->email,
@@ -135,6 +143,13 @@ class User extends Authenticatable implements JWTSubject
     {
         return Attribute::make(
             get: fn () => !is_null($this->email_verified_at)
+        );
+    }
+
+    public function password(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value) =>  Hash::needsRehash($value) ? Hash::make($value) : $value
         );
     }
 

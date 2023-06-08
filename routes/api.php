@@ -12,6 +12,7 @@ Route::post('login', [LoginController::class, 'login'])->name('login');
 Route::get('verification/email', [EmailVerificationController::class, 'verify'])->name('email_verification');
 
 Route::post('password/reset', [PasswordResetController::class, 'sendMail'])->name('password.reset.mail');
+Route::put('password/reset', [PasswordResetController::class, 'update'])->name('password.update');
 
 Route::group(['middleware' => ['auth']], function () {
     Route::put('user/profile', [UserProfileController::class, 'update'])->name('profile.update');

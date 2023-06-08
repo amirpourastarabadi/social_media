@@ -12,6 +12,7 @@ use App\Events\User\UpdateUserProfileEvent;
 use App\Listeners\User\FindRequestedUser;
 use App\Listeners\User\GeneratePasswordResetToken;
 use App\Listeners\User\PasswordResetEmail;
+use App\Listeners\User\RemoveOldResetPasswordTokens;
 use App\Listeners\User\TryVerifyUser;
 use App\Listeners\User\UpdateProfile;
 use App\Listeners\User\UpdateUser;
@@ -43,6 +44,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         PasswordResetRequestEvent::class => [
             FindRequestedUser::class,
+            RemoveOldResetPasswordTokens::class,
             GeneratePasswordResetToken::class,
             PasswordResetEmail::class,
         ],
