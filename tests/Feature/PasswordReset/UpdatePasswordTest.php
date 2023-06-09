@@ -14,6 +14,7 @@ use Tests\TestCase;
 class UpdatePasswordTest extends TestCase
 {
     use RefreshDatabase;
+    use WithFaker;
 
     public function test_user_can_update_password_if_has_right_token(): void
     {
@@ -44,16 +45,15 @@ class UpdatePasswordTest extends TestCase
         );
     }
 
-
     public function test_user_cannot_update_password_with_mismatch_mail_and_token(): void
     {
         $user = User::factory()->create();
         $maliciousUser = User::factory()->create();
         PasswordReset::generateTokenForUser($user);
         PasswordReset::generateTokenForUser($maliciousUser);
-
+        
         $inputs = [
-            'token' => $$maliciousUser->reset_password_token,
+            'token' => $maliciousUser->reset_password_token,
             'email' => $user->email,
             'password' => 'password',
             'password_confirmation' => 'password',
@@ -61,7 +61,23 @@ class UpdatePasswordTest extends TestCase
 
         $response = $this->putJson('/api/password/reset', $inputs);
         $response->assertStatus(Response::HTTP_UNAUTHORIZED);
-        $this->assertGuest($user);
-        // dd(Auth::attempt(['email' => $user->email, 'password' => 'password']));
+        $this->assertGuest('api');
+    }
+
+    public function test_user_cannot_update_password_of_invalid_password()
+    {
+        $user = User::factory()->create();
+        PasswordReset::generateTokenForUser($user);
+        
+        $inputs = [
+            'token' => $user->reset_password_token,
+            'email' => $this->faker()->email(),
+            'password' => 'password',
+            'password_confirmation' => 'password',
+        ];
+
+        $response = $this->putJson('/api/password/reset', $inputs);
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
+        $this->assertGuest('api');
     }
 }
