@@ -37,17 +37,17 @@ class PasswordResetController extends Controller
         $user = User::where('email', $request->validated('email'))->first();
         
         if(is_null($user)){
-            abort(Response::HTTP_UNAUTHORIZED);
+            abort(Response::HTTP_UNAUTHORIZED, 'invalid inputs.');
         }
         if($user->reset_password_token !== $request->validated('token'))
         {
-            abort(Response::HTTP_UNAUTHORIZED);
+            abort(Response::HTTP_UNAUTHORIZED,'invalid inputs.');
         }
         
         $user->update(['password' => $request->validated('password')]);
         
         $token = User::attemptToLogin($request->only('password', 'email'))->auth_token;
-
+        
         return response()->json(['message' => 'password updated', 'auth_token' => $token, 'redirect_to' => route('home')]);
     }
 }

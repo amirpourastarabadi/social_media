@@ -114,6 +114,20 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        var passwordInput = document.getElementById('password');
+        var showPasswordBtn = document.getElementById('show-password-btn');
+
+        showPasswordBtn.addEventListener('click', function() {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                showPasswordBtn.innerHTML = '<i class="fa fa-eye-slash"></i>';
+            } else {
+                passwordInput.type = 'password';
+                showPasswordBtn.innerHTML = '<i class="fa fa-eye"></i>';
+            }
+        });
+    </script>
+    <script>
         $(document).ready(function() {
             $('#update-password-form').submit(function(event) {
                 event.preventDefault()
@@ -124,9 +138,11 @@
                     type: "PUT",
                     data: form_data,
                     success: function(response) {
+                        console.log(response.message)
                         $('#message').html(response.message).removeClass('d-none alert-danger').addClass('alert-info');
                     },
                     error: function(xhr) {
+                        console.log(xhr.responseJSON)
                         $('#message').html(xhr.responseJSON.message).removeClass('d-none alert-info').addClass('alert-danger');
                     }
                 });

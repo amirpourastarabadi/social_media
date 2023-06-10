@@ -6,7 +6,6 @@ use App\Http\Resources\User\Authentication\Login\LoginUserResource;
 use App\Http\Requests\User\Auth\LoginRequest;
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Illuminate\Http\Response;
 
 class LoginController extends Controller
 {
@@ -17,9 +16,9 @@ class LoginController extends Controller
 
     public function login(LoginRequest $request)
     {
-        if(!$user = User::attemptToLogin($request->only('password', 'email'))){
-            return response()->json(['message' => 'invalid credentials.'], Response::HTTP_UNAUTHORIZED);
-        }
+        return response()->json([$request->all(), User::attemptToLogin($request->only('password', 'email'))]);
+        
+        $user = User::attemptToLogin($request->only('password', 'email'));
 
         return LoginUserResource::make($user);
     }

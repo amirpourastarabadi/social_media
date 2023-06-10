@@ -50,7 +50,7 @@
                             </div>
 
                             <button type="submit" class="btn btn-primary">Save Changes</button>
-                            <a href="{{ route('password.request') }}" class="btn btn-link">Reset Password</a>
+                            <a href="{{ route('password.reset.request') }}" class="btn btn-link">Reset Password</a>
                         </form>
                     </div>
                 </div>

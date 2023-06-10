@@ -7,7 +7,7 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Http\Response;
+use Illuminate\Validation\UnauthorizedException;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Support\Facades\Auth;
@@ -78,7 +78,7 @@ class User extends Authenticatable implements JWTSubject
         $auth_token = Auth::attempt($credentials);
         
         if (!$auth_token) {
-            abort(Response::HTTP_UNAUTHORIZED);
+            throw new UnauthorizedException('invalid credentials.');
         }
         
         auth()->user()->update(['jwt_token' => $auth_token]);

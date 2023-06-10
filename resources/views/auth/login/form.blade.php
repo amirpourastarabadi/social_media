@@ -61,6 +61,8 @@
           <div class="card-body">
             <form method="POST" action="{{ route('login') }}" id='login-form'>
               @csrf
+
+              <div class="d-none" id="message"></div>
               <div class="form-group">
                 <label for="email">Email address</label>
                 <input type="email" class="form-control" id="email" name="email" required>
@@ -79,7 +81,7 @@
               <div class="alert text-danger" id='alert-message'></div>
               <button type="submit" class="btn btn-primary my-3" id="login-button">Login</button>
               <div class="mt-3">
-                <a href="{{ route('password.request') }}">Forgot your password?</a>
+                <a href="{{ route('password.reset.request') }}">Forgot your password?</a>
               </div>
               <div class="mt-3">
                 <a href="{{ route('register.form') }}">Create an account</a>
@@ -93,6 +95,8 @@
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
   <script>
     var passwordInput = document.getElementById('password');
     var showPasswordBtn = document.getElementById('show-password-btn');
@@ -109,33 +113,28 @@
   </script>
 
   <script>
-    const submitButton = document.querySelector('#login-button');
-    const form = document.querySelector('#login-form');
-    const loginUrl = "{{route('login')}}"
-    // Add an event listener to the form submit event
-    form.addEventListener('submit', event => {
-      // Prevent the default form submission behavior
-      event.preventDefault();
-      fetch(loginUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
+
+
+    $(document).ready(function() {
+      $('#login-form').submit(function(event) {
+        event.preventDefault()
+        let form_data = $(this).serialize()
+        console.log(form_data)
+        $.ajax({
+          url: "{{ route('login') }}",
+          type: "POST",
+          data: form_data,
+          success: function(response) {
+            console.log(response)
+            $('#message').html(response.message).removeClass('d-none alert-danger').addClass('alert-info');
           },
-          body: JSON.stringify({
-            email: form.querySelector('#email').value,
-            password: form.querySelector('#password').value
-          })
-        })
-        .then(response => response.json())
-        .then(data => {
-          // Store the JWT token in local storage
-          localStorage.setItem('jwt_token', data.token);
-        })
-        .catch(error => {
-          document.querySelector('#alert-message').innerText = 'amir'
-          console.error('Error authenticating user:', error);
+          error: function(xhr) {
+            console.log('amir')
+            $('#message').html(xhr.responseJSON.message).removeClass('d-none alert-info').addClass('alert-danger');
+          }
         });
-    })
+      });
+    });
   </script>
 </body>
 
