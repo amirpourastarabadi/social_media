@@ -1,113 +1,57 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.app')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Reset Password</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
-    <style>
-        body {
-            position: relative;
-            background-image: url('{{asset("storage/generals/background.jpg")}}');
-            background-size: cover;
-            background-position: center;
-        }
+@section('main_content')
+<div class="container-fluid h-100">
+    <div class="row h-100">
+        <div class="col-sm-12 my-auto">
+            <div class="card">
+                <div class="card-header">{{ __('Reset Password') }}</div>
 
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            background-image: url('{{asset("storage/generals/background.jpg")}}');
-            filter: blur(50%);
-            z-index: -1;
-        }
+                <div class="card-body">
+                    <form method="POST" action="" id="request-email-form">
+                        @csrf
+                        <div class="alert d-none" id="message"></div>
+                        <div class="form-group">
+                            <label for="email">{{ __('Email') }}</label>
+                            <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" required autocomplete="email">
 
-        .card {
-            max-width: 500px;
-            margin: 0 auto;
-            margin-top: 100px;
-            background-color: rgba(255, 255, 255, 0.95);
-            border-radius: 10px;
-            padding: 30px;
-        }
+                            @error('email')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
 
-        .card-header {
-            font-size: 24px;
-            font-weight: bold;
-            text-align: center;
-        }
-
-        .btn {
-            width: 100%;
-        }
-
-        img {
-            max-width: 200px;
-        }
-    </style>
-</head>
-
-<body>
-
-    <div class="container-fluid h-100">
-        <div class="row h-100">
-            <div class="col-sm-12 my-auto">
-                <div class="card">
-                    <div class="card-header">{{ __('Reset Password') }}</div>
-
-                    <div class="card-body">
-                        <form method="POST" action="" id="request-email-form">
-                            @csrf
-                            <div class="alert d-none" id="message"></div>
-                            <div class="form-group">
-                                <label for="email">{{ __('Email') }}</label>
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" required autocomplete="email">
-
-                                @error('email')
-                                <span class="invalid-feedback" role="alert">
-                                    <strong>{{ $message }}</strong>
-                                </span>
-                                @enderror
-                            </div>
-
-                            <div class="form-group mb-0">
-                                <button type="submit" class="btn btn-primary" id="send-email-btn">{{ __('Send Mail') }}</button>
-                            </div>
-                        </form>
-                    </div>
+                        <div class="form-group mb-0">
+                            <button type="submit" class="btn btn-primary" id="send-email-btn">{{ __('Send Mail') }}</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+</div>
+@endsection
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#request-email-form').submit(function(event) {
-                event.preventDefault()
-                let form_data = $(this).serialize()
+@section('customize_js')
+<script>
+    $(document).ready(function() {
+        $('#request-email-form').submit(function(event) {
+            event.preventDefault()
+            let form_data = $(this).serialize()
 
-                $.ajax({
-                    url: "{{ route('password.reset.mail') }}",
-                    type: "POST",
-                    data: form_data,
-                    success: function(response) {
-                        $('#message').html(response.message).removeClass('d-none alert-danger').addClass('alert-info');
-                    },
-                    error: function(xhr) {
-                        $('#message').html(xhr.responseJSON.message).removeClass('d-none alert-info').addClass('alert-danger');
-                    }
-                });
+            $.ajax({
+                url: "{{ route('password.reset.mail') }}",
+                type: "POST",
+                data: form_data,
+                success: function(response) {
+                    $('#message').html(response.message).removeClass('d-none alert-danger').addClass('alert-info');
+                },
+                error: function(xhr) {
+                    $('#message').html(xhr.responseJSON.message).removeClass('d-none alert-info').addClass('alert-danger');
+                }
             });
         });
-    </script>
-
-</body>
-
-</html>
+    });
+</script>
+@endsection

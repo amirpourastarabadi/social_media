@@ -16,8 +16,6 @@ class LoginController extends Controller
 
     public function login(LoginRequest $request)
     {
-        return response()->json([$request->all(), User::attemptToLogin($request->only('password', 'email'))]);
-        
         $user = User::attemptToLogin($request->only('password', 'email'));
 
         return LoginUserResource::make($user);

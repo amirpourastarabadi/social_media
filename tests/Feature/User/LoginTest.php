@@ -25,6 +25,7 @@ class LoginTest extends UserTestCase
         $response = $this->postJson('/api/login', $inputs);
 
         $response->assertSuccessful();
+
         $response->assertJson(
             fn (AssertableJson $response) =>
             $response->where('data.key', $user->uuid)
@@ -46,7 +47,10 @@ class LoginTest extends UserTestCase
         ];
 
         $response = $this->postJson('/api/login', $inputs);
+
         $response->assertStatus(Response::HTTP_UNAUTHORIZED);
+
+        $this->assertSame('invalid credentials.', $response->json('message'));
 
         $this->assertFalse(Auth::guard('api')->check());
     }
