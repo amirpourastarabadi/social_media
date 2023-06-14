@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User\Auth;
 
 use App\Http\Requests\User\Password\PasswordResetRequest;
 use App\Events\User\PasswordResetRequestEvent;
+use App\Events\User\PasswordUpdateEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\Password\PasswordUpdatedRequest;
 use App\Models\User;
@@ -34,20 +35,10 @@ class PasswordResetController extends Controller
     public function update(PasswordUpdatedRequest $request)
     {
 
-        $user = User::where('email', $request->validated('email'))->first();
+        $event = new PasswordUpdateEvent($request->validated('email'), $request->validated('password'), $request->validated('token'));
         
-        if(is_null($user)){
-            abort(Response::HTTP_UNAUTHORIZED, 'invalid inputs.');
-        }
-        if($user->reset_password_token !== $request->validated('token'))
-        {
-            abort(Response::HTTP_UNAUTHORIZED,'invalid inputs.');
-        }
+        event($event); 
         
-        $user->update(['password' => $request->validated('password')]);
-        
-        $token = User::attemptToLogin($request->only('password', 'email'))->auth_token;
-        
-        return response()->json(['message' => 'password updated', 'auth_token' => $token, 'redirect_to' => route('home')]);
+        return response()->json(['message' => 'password updated', 'auth_token' => $event->getResult('auth_token'), 'redirect_to' => route('home')]);
     }
 }

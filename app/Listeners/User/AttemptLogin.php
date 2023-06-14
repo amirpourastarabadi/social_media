@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class FindRequestedUser
+class AttemptLogin
 {
     /**
      * Create the event listener.
@@ -21,6 +21,14 @@ class FindRequestedUser
      */
     public function handle(object $event): void
     {
-        $event->user = User::where('email', $event->userEmail)->first();
+        $event->result['auth_token'] = User::attemptToLogin($this->getCredentials($event))->auth_token;
+    }
+
+    private function getCredentials($event)
+    {
+        return [
+            'password' => $event->newPassword,
+            'email' => $event->userEmail,
+        ];
     }
 }

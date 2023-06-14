@@ -2,22 +2,25 @@
 
 namespace App\Providers;
 
-use App\Events\User\EmailVerificationEvent;
-use App\Events\User\PasswordResetRequestEvent;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
-use App\Listeners\User\SendVerificationEmail;
-use App\Events\User\RegistrationEvent;
-use App\Events\User\UpdateUserProfileEvent;
-use App\Listeners\User\FindRequestedUser;
-use App\Listeners\User\GeneratePasswordResetToken;
-use App\Listeners\User\PasswordResetEmail;
 use App\Listeners\User\RemoveOldResetPasswordTokens;
-use App\Listeners\User\TryVerifyUser;
-use App\Listeners\User\UpdateProfile;
-use App\Listeners\User\UpdateUser;
+use App\Listeners\User\GeneratePasswordResetToken;
+use App\Events\User\PasswordResetRequestEvent;
+use App\Listeners\User\SendVerificationEmail;
+use App\Events\User\EmailVerificationEvent;
+use App\Events\User\UpdateUserProfileEvent;
+use App\Listeners\User\PasswordResetEmail;
+use App\Listeners\User\FindRequestedUser;
+use App\Listeners\User\TryUpdatePassword;
+use App\Events\User\PasswordUpdateEvent;
+use App\Events\User\RegistrationEvent;
 use Illuminate\Auth\Events\Registered;
+use App\Listeners\User\UpdateProfile;
+use App\Listeners\User\TryVerifyUser;
+use App\Listeners\User\AttemptLogin;
 use App\Listeners\User\UserCreation;
+use App\Listeners\User\UpdateUser;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -48,6 +51,11 @@ class EventServiceProvider extends ServiceProvider
             GeneratePasswordResetToken::class,
             PasswordResetEmail::class,
         ],
+        PasswordUpdateEvent::class => [
+            FindRequestedUser::class,
+            TryUpdatePassword::class,
+            AttemptLogin::class,
+        ]
     ];
 
     /**

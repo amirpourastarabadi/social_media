@@ -2,7 +2,6 @@
 
 namespace App\Events\User;
 
-use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -11,19 +10,18 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class PasswordResetRequestEvent
+class PasswordUpdateEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public null|User $user = null;
+    public array $result = [];
     /**
      * Create a new event instance.
      */
-    public function __construct(public string $userEmail)
+    public function __construct(public string $userEmail, public string $newPassword, public string $resetPasswordToken)
     {
+        //
     }
-
-
 
     /**
      * Get the channels the event should broadcast on.
@@ -35,5 +33,10 @@ class PasswordResetRequestEvent
         return [
             new PrivateChannel('channel-name'),
         ];
+    }
+
+    public function getResult(null|string $key = null): string|array
+    {
+        return is_null($key) ? $this->result : $this->result[$key] ?? null;
     }
 }
