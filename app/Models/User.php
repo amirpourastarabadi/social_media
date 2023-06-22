@@ -171,4 +171,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(PasswordReset::class);
     }
+
+    public function followings()
+    {
+        return $this->belongsToMany(static::class, 'connections', 'follower_id', 'following_id');
+    }
 }

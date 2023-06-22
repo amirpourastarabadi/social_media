@@ -9,16 +9,19 @@ use App\Listeners\User\GeneratePasswordResetToken;
 use App\Events\User\PasswordResetRequestEvent;
 use App\Listeners\User\SendVerificationEmail;
 use App\Events\User\EmailVerificationEvent;
+use App\Events\User\FollowEvent;
 use App\Events\User\UpdateUserProfileEvent;
 use App\Listeners\User\PasswordResetEmail;
 use App\Listeners\User\FindRequestedUser;
 use App\Listeners\User\TryUpdatePassword;
 use App\Events\User\PasswordUpdateEvent;
 use App\Events\User\RegistrationEvent;
+use App\Listeners\User\AddConnection;
 use Illuminate\Auth\Events\Registered;
 use App\Listeners\User\UpdateProfile;
 use App\Listeners\User\TryVerifyUser;
 use App\Listeners\User\AttemptLogin;
+use App\Listeners\User\SendNewConnectionMessage;
 use App\Listeners\User\UserCreation;
 use App\Listeners\User\UpdateUser;
 
@@ -55,6 +58,10 @@ class EventServiceProvider extends ServiceProvider
             FindRequestedUser::class,
             TryUpdatePassword::class,
             AttemptLogin::class,
+        ],
+        FollowEvent::class => [
+            AddConnection::class,
+            SendNewConnectionMessage::class,
         ]
     ];
 
