@@ -24,7 +24,7 @@ class EmailVerificationTest extends TestCase
         
         $response = $this->getJson(
             route(
-                'email_verification',
+                'api.email_verification',
                 [
                     'token' => $token,
                     'email' => $user->email
@@ -47,7 +47,7 @@ class EmailVerificationTest extends TestCase
         $token = 'invalid token';
         $response = $this->getJson(
             route(
-                'email_verification',
+                'api.email_verification',
                 [
                     'token' => $token,
                     'email' => $user->email

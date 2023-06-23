@@ -116,7 +116,7 @@ class User extends Authenticatable implements JWTSubject
     {
         return Attribute::make(
             get: fn () => route(
-                'email_verification',
+                'api.email_verification',
                 [
                     'token' => $this->email_verification_token,
                     'email' => $this->email,
@@ -149,6 +149,13 @@ class User extends Authenticatable implements JWTSubject
     {
         return Attribute::make(
             set: fn ($value) =>  Hash::needsRehash($value) ? Hash::make($value) : $value
+        );
+    }
+
+    public function pageUrl():Attribute
+    {
+        return Attribute::make(
+            get: fn() => route('web.user', ['user' => $this]) 
         );
     }
 

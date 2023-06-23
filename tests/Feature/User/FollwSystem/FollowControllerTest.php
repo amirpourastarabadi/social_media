@@ -2,9 +2,12 @@
 
 namespace Tests\Feature\User\FollwSystem;
 
+use App\Mail\NewConnectionEmail;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Mail;
 use Tests\Feature\User\UserTestCase;
 use Tests\TestCase;
 
@@ -29,16 +32,23 @@ class FollowControllerTest extends UserTestCase
 
     public function test_when_user_follow_other_user_second_user_receive_a_following_notification(): void
     {
-        // create three user
-        // one user follow other one
-        // followed user appears it following list
-        // third user not appears it following list
+        Mail::fake();
+       
+        $users = User::factory(2)->create();
+        
+        $this->login($users[0]);
+        
+        $response = $this->postJson(route('api.follow', ['following' => $users[1]]));
+
+        Mail::assertSent(NewConnectionEmail::class);
     }
 
     public function test_guest_user_cant_request_for_following():void
     {
-        // create user
-        // request for follow
-        // cant pass auth middleware
+        $users = User::factory(2)->create();
+        
+        $response = $this->postJson(route('api.follow', ['following' => $users[1]]));
+        
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
     }
 }

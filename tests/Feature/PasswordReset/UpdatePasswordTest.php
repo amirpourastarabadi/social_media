@@ -40,7 +40,7 @@ class UpdatePasswordTest extends TestCase
             fn (AssertableJson $response) =>
             $response->where('message', 'password updated')
                 ->where('auth_token', $user->auth_token)
-                ->where('redirect_to', route('home'))
+                ->where('redirect_to', route('web.home'))
                 ->etc()
         );
     }

@@ -39,6 +39,6 @@ class PasswordResetController extends Controller
         
         event($event); 
         
-        return response()->json(['message' => 'password updated', 'auth_token' => $event->getResult('auth_token'), 'redirect_to' => route('home')]);
+        return response()->json(['message' => 'password updated', 'auth_token' => $event->getResult('auth_token'), 'redirect_to' => route('web.home')]);
     }
 }
