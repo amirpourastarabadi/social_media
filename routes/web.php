@@ -12,9 +12,11 @@ Route::get('', HomeController::class)->name('home');
 Route::get('register', [RegisterController::class, 'showForm'])->name('register.form');
 Route::get('login', [LoginController::class, 'showForm'])->name('login.form');
 
-Route::get('user/profile', [UserProfileController::class, 'show']);
-Route::get('user/{user:uuid}', [UserController::class, 'show'])->name('user');
 
 Route::get('password/reset-request', [PasswordResetController::class, 'requestMailForm'])->name('password.reset.request');
 Route::get('password/reset-form', [PasswordResetController::class, 'newPasswordFrom'])->name('password.reset.new_password');
 
+Route::middleware(['auth'],  function(){
+    Route::get('user/profile', [UserProfileController::class, 'show']);
+    Route::get('user/{user:uuid}', [UserController::class, 'show'])->name('user');
+});
