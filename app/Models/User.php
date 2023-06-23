@@ -81,6 +81,7 @@ class User extends Authenticatable implements JWTSubject
         abort_if(!$auth_token, Response::HTTP_UNAUTHORIZED, 'invalid credentials.');
 
         auth()->user()->update(['jwt_token' => $auth_token]);
+        
         return auth()->user();
     }
 
@@ -129,7 +130,7 @@ class User extends Authenticatable implements JWTSubject
     {
         return Attribute::make(
             get: fn () => route(
-                'password.reset.new_password',
+                'web.password.reset.new_password',
                 [
                     'token' => $this->reset_password_token,
                     'email' => $this->email,

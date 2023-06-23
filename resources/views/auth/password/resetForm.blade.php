@@ -41,7 +41,7 @@
             let form_data = $(this).serialize()
 
             $.ajax({
-                url: "{{ route('password.reset.mail') }}",
+                url: "{{ route('api.password.reset.mail') }}",
                 type: "POST",
                 data: form_data,
                 success: function(response) {

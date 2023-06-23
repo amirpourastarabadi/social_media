@@ -9,7 +9,7 @@
                 <div class="card-header">{{ __('Registration Form') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ route('register') }}">
+                    <form method="POST" action="{{ route('api.register') }}">
                         @csrf
 
                         <div class="form-group">
@@ -55,7 +55,7 @@
                         </div>
 
                         <div class="mt-3">
-                            <a href="{{ route('login.form') }}">Login</a>
+                            <a href="{{ route('web.login.form') }}">Login</a>
                         </div>
                     </form>
                 </div>

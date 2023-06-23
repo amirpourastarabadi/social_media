@@ -8,7 +8,7 @@
         <div class="card-header">{{ __('Login') }}</div>
 
         <div class="card-body">
-          <form method="POST" action="{{ route('login') }}" id='login-form'>
+          <form method="POST" action="{{ route('api.login') }}" id='login-form'>
             @csrf
 
             <div class="d-none" id="message"></div>
@@ -30,10 +30,10 @@
             <div class="alert text-danger" id='alert-message'></div>
             <button type="submit" class="btn btn-primary my-3" id="login-button">Login</button>
             <div class="mt-3">
-              <a href="{{ route('password.reset.request') }}">Forgot your password?</a>
+              <a href="{{ route('web.password.reset.request') }}">Forgot your password?</a>
             </div>
             <div class="mt-3">
-              <a href="{{ route('register.form') }}">Create an account</a>
+              <a href="{{ route('web.register.form') }}">Create an account</a>
             </div>
           </form>
         </div>
@@ -60,12 +60,11 @@
       let form_data = $(this).serialize()
       console.log(form_data)
       $.ajax({
-        url: "{{ route('login') }}",
+        url: "{{ route('api.login') }}",
         type: "POST",
         data: form_data,
         success: function(response) {
-          console.log(response)
-          $('#message').html(response.message).removeClass('d-none alert-danger').addClass('alert-info');
+          window.location.href = "{{route('web.profile')}}"
         },
         error: function(xhr) {
           console.log('amir')

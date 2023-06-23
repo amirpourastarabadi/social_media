@@ -22,7 +22,7 @@
                     User Information
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('profile.update') }}" method="POST">
+                    <form action="{{ route('api.profile.update') }}" method="POST">
                         @csrf
                         @method('PUT')
                         <div class="form-group">
@@ -43,7 +43,7 @@
                         </div>
 
                         <button type="submit" class="btn btn-primary">Save Changes</button>
-                        <a href="{{ route('password.reset.request') }}" class="btn btn-link">Reset Password</a>
+                        <a href="{{ route('web.password.reset.request') }}" class="btn btn-link">Reset Password</a>
                     </form>
                 </div>
             </div>

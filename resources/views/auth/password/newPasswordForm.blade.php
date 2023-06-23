@@ -10,7 +10,7 @@
                 <div class="card-header">{{ __('Reset Password') }}</div>
 
                 <div class="card-body">
-                    <form method="" action="{{ route('password.update') }}" id="update-password-form">
+                    <form method="" action="{{ route('api.password.update') }}" id="update-password-form">
                         @csrf
                         <div id="message" class="alert d-none"></div>
                         <input type="hidden" name="token" value="{{ $token }}">
@@ -80,7 +80,7 @@
             let form_data = $(this).serialize()
 
             $.ajax({
-                url: "{{ route('password.update') }}",
+                url: "{{ route('api.password.update') }}",
                 type: "PUT",
                 data: form_data,
                 success: function(response) {
